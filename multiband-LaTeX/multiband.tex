@@ -1,0 +1,401 @@
+\documentclass[
+aps,
+prl,
+groupedaddress,
+superscriptaddress,
+floatfix,
+%showpacs,
+%showkeys,
+%draft,
+%preprint,
+%reprint,
+%twocolumn,
+notitlepage
+]{revtex4-1}
+
+% documentclass options explained:
+% 'draft': mark overfull boxes with black boxes
+% 'showpacs': PACS codes
+% 'showkeys': keywords
+% 'floatfix'  table and figure placement
+
+\usepackage{graphicx}% Include figure files
+%\usepackage[dvips]{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{braket}
+%\usepackage{pscyr}
+%\usepackage[utf8]{inputenc} % needed for Cyrillic fonts
+%\usepackage[T2A]{fontenc} % needed for Cyrillic fonts
+\usepackage{hyperref} % hypertext capabilities
+\usepackage{subfigure}
+%\usepackage{dcolumn} % Align table columns on decimal point
+\usepackage{bm} % bold math
+\usepackage{mathtools} % dcases (uncompressed fractions)
+\usepackage{float}
+
+% My definitions
+\def\sech{{\rm sech}}
+\def\rot{{\rm rot}}
+\def\div{{\rm div}}
+\def\arcsinh{{\rm arcsinh}}
+\def\Re{{\rm Re\,}}
+\def\Im{{\rm Im\,}}
+\def\arccot{{\rm arccot}}
+\def\p{\partial}
+\DeclareMathOperator{\sgn}{sgn}
+
+%%% Control of figures: comment line \figurestrue for text-only
+\newif\iffigures
+%\figurestrue
+
+\iffigures
+\usepackage{cprotect}
+\fi
+
+\begin{document}
+	
+%\preprint{}
+
+%\title{Integrals}
+\title{Excitons in MoS2 from the multiband model}
+
+\author{D. R. Gulevich} 
+\affiliation{ITMO University, St. Petersburg 197101, Russia}
+
+\date{\today}
+
+\begin{abstract} 
+In collaboration with Y. Zhumagulov, V. Zalipaev, A. Vagov and V. Perebeinos.
+\end{abstract}
+
+%\maketitle
+{\let\newpage\relax\maketitle}
+
+%%%%%%%%%%%%%%55
+%\iffalse
+%%%%%%%%%%%%%%%5
+%--------------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------------
+\section{Introduction}
+%--------------------------------------------------------------------------------------------%--------------------------------------------------------------------------------------------
+
+Here we will calculate exciton states using the model~\cite{Peeters-PRB-2017}. 
+See the Jupyter notebook \verb|multiband.ipynb|.
+
+%-----------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+\section{Model}
+%-----------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+
+Consider only the excitons with zero center-of-mass momentum $\pmb{K}=\pmb{k}_e+\pmb{k}_h=0$. Introducing $\pmb{k}\equiv \pmb{k}_e = -\pmb{k}_h$,
+and using transformation to the polar coordinates
+$$
+\p_x = \cos\varphi\; \p_r - \frac{\sin\varphi}{r}\,\p_\varphi, \quad
+\p_y = \sin\varphi\; \p_r + \frac{\cos\varphi}{r}\,\p_\varphi,
+$$
+exciton Hamiltonian (5) of Ref.~\cite{Peeters-PRB-2017} can be written in the following operator form
+\setlength\arraycolsep{7pt}
+\renewcommand*{\arraystretch}{2}
+\begin{equation}
+\hat{H} =
+\begin{pmatrix}
+-V(r) &  e^{i\tau_h \varphi}D^-_h & -e^{-i\tau_e \varphi}D^+_e & 0 \\
+e^{-i\tau_h\varphi}D^+_h & \Delta_h-V(r) & 0 & -e^{-i\tau_e\varphi}D^+_e \\
+-e^{i\tau_e\varphi}D^-_e & 0 & -\Delta_e-V(r) & e^{i\tau_h\varphi}D^-_h \\
+0 & -e^{i\tau_e\varphi}D^-_e & e^{-i\tau_h\varphi}D^+_h & \Lambda-V(r)
+\end{pmatrix},
+\label{H}
+\end{equation}
+where $V(r)$ is the Keldysh potential 
+\begin{equation}
+V(r) = \mathcal{V}_0\,\frac{\pi}{2 r_0} \left[ H_0\left(\frac{r}{r_0}\right)-Y_0\left(\frac{r}{r_0}\right) \right]  = \int_0^{\infty}
+\tilde{V}(k)J_0(k r) k dk,\quad 
+\tilde{V}(k)=\frac{\mathcal{V}_0}{k(1+r_0 k)}
+\label{Keldysh}
+\end{equation}
+and we have defined differential operators
+$D^\pm_{e,h} \equiv i\tau_{e,h}\p_r \pm \p_\varphi/r$
+and quantities
+$\Delta_{e,h} \equiv \Delta -\lambda s_{e,h}\tau_{e,h}$,
+$\Lambda \equiv \lambda(s_e \tau_e-s_h\tau_h)$.
+Here we have expressed quantities with dimension of energy ($\Delta$, $\lambda$, $V(r)$ etc.) in units of the hopping parameter~$t$ and spatial variables in units of the lattice constant~$a$.
+
+%-----------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+\subsection{$A$ exciton in $K$ valley}
+%-----------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+
+Consider a special case $s_e=\tau_e=1$, $s_h=\tau_h=-1$ which correspond to the $A$ exciton in $K$ valley. Then,
+
+\setlength\arraycolsep{7pt}
+\renewcommand*{\arraystretch}{2}
+\begin{equation}
+\hat{H} =
+\begin{pmatrix}
+-V(r) &  e^{-i \varphi}D^-_h & -e^{-i \varphi}D^+_e & 0 \\
+e^{i\varphi}D^+_h & \Delta_h-V(r) & 0 & -e^{-i\varphi}D^+_e \\
+-e^{i\varphi}D^-_e & 0 & -\Delta_e-V(r) & e^{-i\varphi}D^-_h \\
+0 & -e^{i\varphi}D^-_e & e^{i\varphi}D^+_h & -V(r)
+\end{pmatrix},
+\label{H}
+\end{equation}
+
+Using the ansatz
+$\psi(r,\varphi) = e^{i l \varphi} \left(  \psi^l_1(r) e^{-i\varphi}, \,\psi^l_2(r), \,\psi^l_3(r), \,\psi^l_4(r) e^{i\varphi}\right)^T $, the Hamiltonian~\eqref{H} acting on \{$\psi^l_1(r)$, $\psi^l_2(r)$, $\psi^l_3(r)$, $\psi^l_4(r)$\} takes the form
+\setlength\arraycolsep{7pt}
+\renewcommand*{\arraystretch}{2}
+\begin{equation}
+\hat{H}_l =
+\begin{pmatrix}
+-V(r) &  -i\p_r - \frac{il}{r} & -i\p_r - \frac{il}{r} & 0 \\
+(-i\p_r)^\dagger + \frac{il}{r} & \Delta_h-V(r) & 0 & (-i\p_r)^\dagger - \frac{il}{r} \\
+(-i\p_r)^\dagger + \frac{il}{r} & 0 & -\Delta_e-V(r) & (-i\p_r)^\dagger - \frac{il}{r} \\
+0 & -i\p_r + \frac{il}{r} & -i\p_r + \frac{il}{r} & -V(r)
+\end{pmatrix},
+\label{Hl}
+\end{equation}
+where $(-i\p_r)^\dagger = -i\p_r-i/r$, or, equivalently, $\p_r^\dagger = -\p_r-1/r$. Note that the Hamiltonian~\eqref{Hl} is self-adjoint with respect to the scalar product
+$$
+\langle \pmb\psi, \pmb\chi \rangle = \sum_{i=1}^4 \int_0^\infty \psi^*_i(r) \chi_i(r)\, r dr.
+$$
+Let us first consider the $l=0$ state for which
+\setlength\arraycolsep{7pt}
+\renewcommand*{\arraystretch}{2}
+\begin{equation}
+\hat{H}_0 =
+\begin{pmatrix}
+-V(r) &  -i\p_r & -i\p_r & 0 \\
+(-i\p_r)^\dagger & \Delta_h-V(r) & 0 & (-i\p_r)^\dagger \\
+(-i\p_r)^\dagger  & 0 & -\Delta_e-V(r) & (-i\p_r)^\dagger \\
+0 & -i\p_r & -i\p_r & -V(r)
+\end{pmatrix},
+\label{Hl}
+\end{equation}
+Introduce the Hankel transforms (for simplicity we will omit the superscript $l=0$),
+$$
+\psi_{1,4}(r)=\int_0^\infty F_{1,4}(k) J_1(kr) k dk
+\quad\text{and}\quad
+\psi_{2,3}(r)=\int_0^\infty F_{2,3}(k) J_0(kr) k dk,
+$$
+%Note, that the Hankel transform satisfy
+where the inverse transforms are given by
+$$
+F_{1,4}(k)=\int_0^\infty \psi_{1,4}(r) J_1(kr) r dr
+\quad\text{and}\quad
+F_{2,3}(k)=\int_0^\infty \psi_{2,3}(r) J_0(kr) r dr.
+$$
+The transformed Hamiltonian acting on $\mathbf{F}\equiv$ \{$F_1(k)$, $F_2(k)$, $F_3(k)$, $F_4(k)$\} is
+\setlength\arraycolsep{7pt}
+\renewcommand*{\arraystretch}{2}
+\begin{equation}
+\hat{H}_0 =
+\begin{pmatrix}
+-\int_0^\infty \tilde{V}_0(k,k') \;...\; k'dk' &  ik & ik & 0 \\
+-ik & \Delta_h-\int_0^\infty \tilde{V}_1(k,k') \;...\; k'dk' & 0 & -ik \\
+-ik  & 0 & -\Delta_e-\int_0^\infty \tilde{V}_1(k,k') \;...\; k'dk' & -ik \\
+0 & ik & ik & -\int_0^\infty \tilde{V}_0(k,k') \;...\; k'dk'
+\end{pmatrix},
+\label{Hl}
+\end{equation}
+where
+$$
+\tilde{V}_{0,1}(k,k') \equiv \int_0^\infty V(r) J_{0,1}(kr) J_{0,1}(k'r) r dr.
+$$
+%which is manifestly symmetric $\tilde{V}_{0,1}(k,k')=\tilde{V}_{0,1}(k',k)$, and it is known that
+%$$\tilde{V}_0(0,k')k'=\frac{1}{1+r_0 k'}$$
+%where $r_0$ is the screening length. We can then write
+%$$\tilde{V}_{0}(k,k') k' = \frac{1}{1+r_0 k'} + k' \int_0^\infty V(r) \left[J_{0}(kr)-1\right] J_{0}(k'r) r dr.$$
+
+%Note, that as the expected exciton states are bounded,
+%$$\int_0^\infty \psi_i(r)rdr<\infty,$$
+%we have $|F_i(0)|<\infty$. Thus, $F_i(0)$ are unimportant as they do not influence $\psi_i(r)$ and we can only consider $k>0$.
+
+The matrix~\eqref{Hl} acting in space $\mathbb{R}_{>0}\times \mathbb{R}_{>0}\times \mathbb{R}_{>0} \times \mathbb{R}_{>0}$ is not Hermitian because of the integrals $\int_0^\infty \tilde{V}_{0,1}(k,k') F_i(k')\, k'dk'$. Nevertheless, the Hamiltonian can be written as a product
+$
+\hat{H}_0=\hat{A}\hat{K}
+$
+with Hermitian $\hat{A}$ and a positive-definite diagonal matrix $\hat{K}$ containing the $k$-numbers on the diagonal. 
+The resulting generalized eigenvalue problem
+$$
+\hat{A}\hat{K} \mathbf{F}_n = \lambda_n \mathbf{F}_n
+$$
+ensures that 
+%$\lambda_n \in \mathbb{R}$\footnote
+the eigenvalues $\lambda_n$ are real~\footnote{One can convert the system to the conventional eigenvalue problem 
+$\hat{K}^{1/2}\hat{A}\hat{K}^{1/2} \tilde{\mathbf{F}}_n = \lambda_n \tilde{\mathbf{F}}_n$ with $\tilde{\mathbf{F}}_n\equiv \hat{K}^{1/2}\mathbf{F}_n$ and Hermitian matrix $\hat{K}^{1/2}\hat{A}\hat{K}^{1/2}$. However, we do not use this as the numerical tools for solving the generalized eigenvalue systems are provided in Python.}. The Hermitian matrix $A$ acting on  $\hat{K} \mathbf{F}_n$ is
+\setlength\arraycolsep{7pt}
+\renewcommand*{\arraystretch}{2}
+\begin{equation}
+\hat{A} =
+\begin{pmatrix}
+-\int_0^\infty \tilde{V}_0(k,k') \;...\; dk' &  i & i & 0 \\
+-i & \frac{\Delta_h}{k}-\int_0^\infty \tilde{V}_1(k,k') \;...\; dk' & 0 & -i \\
+-i  & 0 & -\frac{\Delta_e}{k}-\int_0^\infty \tilde{V}_1(k,k') \;...\; dk' & -i \\
+0 & i & i & -\int_0^\infty \tilde{V}_0(k,k') \;...\; dk'
+\end{pmatrix},
+\label{Amatrix}
+\end{equation}
+
+%\setlength\arraycolsep{2pt}
+%\renewcommand*{\arraystretch}{2}
+%\begin{multline}
+%\hat{K}^{1/2}\hat{A}\hat{K}^{1/2} = 
+%\\
+%\begin{pmatrix}
+%-\int_0^\infty \tilde{V}_0(k,k') \;...\; \sqrt{kk'}\, dk' &  ik & ik & 0 \\
+%-ik & \Delta_h-\int_0^\infty \tilde{V}_1(k,k') \;...\; \sqrt{kk'}\,dk' & 0 & -ik \\
+%-ik  & 0 & -\Delta_e-\int_0^\infty \tilde{V}_1(k,k') \;...\; \sqrt{kk'}\, dk' & -ik \\
+%0 & ik & ik & -\int_0^\infty \tilde{V}_0(k,k') \;...\; \sqrt{kk'}\,dk'
+%\end{pmatrix},
+%\label{Hl}
+%\end{multline}
+
+\appendix
+
+%-----------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+\section{Evaluation of the potentials}
+%-----------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------
+
+
+We need to evaluate the following integrals:
+\medskip
+
+{\bf Integral 1}:
+$$
+\tilde{V}_{0}(k,k') \equiv \int_0^\infty V(r) J_{0}(kr) J_{0}(k'r) r dr.
+$$
+Using~\eqref{Keldysh}, integral 1 we can write in the form
+$$
+\tilde{V}_{0}(k,k') \equiv \int_0^\infty dk'' k'' \tilde{V}(k'') \int_0^\infty J_{0}(kr) J_{0}(k'r) J_0(k'' r) r dr.
+$$
+Using the formula from the book~\cite{Watson-book} and the orthogonality of the Bessel functions the integral is reduced to
+\begin{equation}
+\tilde{V}_{0}(k,k') = \frac{1}{\pi} \int_0^\pi  \tilde{V}\left(q\right)\, d\varphi,
+\quad\text{where}\quad
+q\equiv |\mathbf{k}-\mathbf{k}'|=\sqrt{k^2+k'^2-2kk'\cos\varphi}.
+\label{V0kk'}
+\end{equation}
+Using the explicit form of $\tilde{V}(q)$,
+\begin{equation*}
+\boxed{
+\tilde{V}_{0}(k,k') = \frac{\mathcal{V}_0}{\pi} \int_0^\pi  \frac{1}{q(1+r_0 q)}\, d\varphi.
+}
+\end{equation*}
+It is easy to see that when either $k$ or $k'$ are equal to zero, we restore the familiar Keldysh potential in the momentum space, $\tilde{V}_{0}(k,0)= \tilde{V}_{0}(0,k) = \tilde{V}(k)$. Useful note: compare this to the similar integral $I_{k,k'}$ in the Eq.(B8) in Ref.~\cite{Wu-PRB-2015} which arises when solving the Bethe-Salpeter equation.
+
+It may appear as though the integral~\eqref{V0kk'} is divergent due to the logarithmic singularity at $k'=k$. However, note that~\eqref{V0kk'} enters the integration
+$$
+\int_0^\infty \tilde{V}_{0}(k,k') F(k') k' dk' = 
+\frac{1}{2\pi} \int_0^\infty  \int_0^{2\pi} \tilde{V}\left(|\mathbf{k}-\mathbf{k}'|\right) F(k')d\varphi k' dk'
+= \frac{1}{2\pi} \iint \tilde{V}(q) F(|\mathbf{k}-\mathbf{q}|) d\mathbf{q}.
+$$
+%This can be transformed to the Cartesian coordinates.
+It is easy to see that the last integral is convergent as $d\mathbf{q}=q\,dq\,d\varphi$ cancels the Coulomb $1/q$ singularity of $\tilde{V}(q)$. 
+
+\medskip
+
+{\bf Integral 2}:
+$$
+\tilde{V}_{1}(k,k') \equiv \int_0^\infty V(r) J_{1}(kr) J_{1}(k'r) r dr.
+$$
+Again, using~\eqref{Keldysh}, integral 2 we can write in the form
+$$
+\tilde{V}_{1}(k,k') \equiv \int_0^\infty dk'' k'' \tilde{V}(k'') \int_0^\infty J_{1}(kr) J_{1}(k'r) J_0(k'' r) r dr.
+$$
+Using the same formula from the book~\cite{Watson-book}, 
+%and the orthogonality of the Bessel functions 
+the integral is transformed to
+\begin{equation}
+\tilde{V}_{1}(k,k') = \frac{kk'}{\pi} \int_0^\infty dk'' k'' \tilde{V}(k'')  \int_0^\infty \int_0^\pi   
+\frac{J_{1}\left(q r\right) J_0(k'' r)}{q} \,r^2\sin^2\varphi\; d\varphi\,  dr,
+\quad\text{where}\quad q=|\mathbf{k}-\mathbf{k}'|
+\label{V1kk'}
+\end{equation}
+Using the property $J_1(x)=-J'_0(x)$ and the orthogonality of Bessel functions,
+\begin{multline}
+\tilde{V}_{1}(k,k') = -\, \frac{kk'}{\pi}     \int_0^\pi d\varphi\,\sin^2\varphi\;
+\frac{1}{q} \frac{d}{dq} \int_0^\infty dk'' k''\tilde{V}(k'') \int_0^\infty dr\,r J_0\left(q r\right) J_0(k'' r) \\
+= -\, \frac{kk'}{\pi}     \int_0^\pi d\varphi\,\sin^2\varphi\;
+\frac{1}{q} \frac{d}{dq} \int_0^\infty dk'' k''\tilde{V}(k'') \frac{\delta(q-k'')}{q} \\
+= -\, \frac{kk'}{\pi}     \int_0^\pi d\varphi\,\sin^2\varphi\;
+\frac{\tilde{V}'(q)}{q}
+\end{multline}
+Finally, using the expression for $\tilde{V}(q)$,
+$$
+\boxed{
+\tilde{V}_{1}(k,k') = \mathcal{V}_0\,\frac{kk'}{\pi}     \int_0^\pi 
+\frac{1+2r_0q}{q^3(1+r_0q)^2}\, \sin^2\varphi\; d\varphi
+}
+$$
+As before, it is possible to show that the double integral over $k' dk' d\varphi$ converges. At $q\to 0$ in a small circle around $\mathbf{k}$ we have
+$$
+\int \frac{|\mathbf{k}\times\mathbf{k}'|^2}{|\mathbf{k}-\mathbf{k}'|^3}\,d^2\mathbf{k}'
+=\int \frac{|\mathbf{k}\times\mathbf{q}|^2}{q^3}\,d^2\mathbf{q} < \infty
+$$
+
+\subsection{Numerical evaluation of the eigensystem}
+
+
+For numerical evaluation we take a uniform mesh $k_n=\Delta k\, n$ for $1\le n\le M$. 
+%Using the uniform mesh $k_n=\Delta k\, n$ for $0\le n\le M$, 
+The integrals are discretized using the quadrature (for simplicity we drop the indices here)
+$$
+\int_0^\infty \tilde{V}(k_n,k')\, F(k')\, k'\, dk'
+\approx
+\sum_{m=1}^{M} w_{nm} F(k_m)k_m
+$$
+where
+$$
+w_{nm}= \tilde{V}(k_n,k_m) \Delta k \quad\text{for}\quad n\neq m,
+$$
+and
+$$
+w_{nn}=\frac{1}{k_n}\int_{k_n-\frac12\Delta k}^{k_n+\frac12\Delta k}
+\tilde{V}^{\rm (sing)}(k_n,k')\, k' \,dk' 
++ \tilde{V}^{\rm (nonsing)}(k_n,k_n) \, \Delta k
+$$
+otherwise, where we have splitted the potential into a singular $ \tilde{V}^{\rm (sing)}(k_n,k')$ and nonsingular  $\tilde{V}^{\rm (nonsing)}(k_n,k')$ parts to deal with the Coloumb singularity. Potentials $\tilde{V}_0(k,k')$ and $\tilde{V}_1(k,k')$ are splitted into singular and nonsingular parts by partial fractions as follows
+\begin{equation*}
+\tilde{V}_{0}(k,k') = \frac{\mathcal{V}_0}{\pi} \int_0^\pi \frac{1}{q}\,d\varphi
+-
+\frac{\mathcal{V}_0}{\pi} \int_0^\pi  \frac{r_0}{1+r_0q} \, d\varphi
+\end{equation*}
+and
+\begin{equation*}
+\tilde{V}_{1}(k,k') = \mathcal{V}_0\,\frac{kk'}{\pi} \int_0^\pi \left( \frac{1}{q^3} - \frac{r_0^2}{q}\right)\sin^2\varphi\,d\varphi
++
+\mathcal{V}_0\,\frac{kk'}{\pi} \int_0^\pi  \frac{r_0^3 \left(2+r_0q\right)}{\left(1+r_0q\right)^2} \sin^2\varphi\, d\varphi.
+\end{equation*}
+Integrals of the singular parts are simple enough to be evaluated exactly in terms of the elliptic functions.
+
+%--------------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------------
+%\seciton{Acknowledgments}
+%--------------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------------------------
+%The work is supported by the Russian Science Foundation under the grant 18-12-00429.
+
+\bibliography{bibliography-excitons}
+
+
+%%%%%%%%%
+%\fi
+%%%%%%%%%%%%%5
+
+\end{document}
+
+
+\iffigures
+\begin{figure}[t!]
+	\begin{center}
+\includegraphics[width=3.4in]{fig1.png}
+		\caption{\label{fig:tffo} 
+Figure caption.
+		}		
+	\end{center}		
+\end{figure}
+\fi
